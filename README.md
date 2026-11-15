@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-An embedded systems-based automotive dashboard simulation developed using two **NXP LPC2129 ARM7 microcontrollers** communicating through the **CAN 2.0B protocol**.
+An embedded systems-based automotive dashboard simulation developed using two LPC2129 microcontroller communicating through the CAN  protocol.
 
 The system monitors vehicle speed, fuel level, engine temperature, and indicator status. Node A collects sensor data and transmits it to Node B through CAN communication. Node B processes the received data and displays the vehicle information on a serial terminal using UART.
 
