@@ -10,7 +10,6 @@ void can1_init(void){
 }
 #define RBS (C1GSR&1)
 void can1_rx(CAN1 *ptr){
-	uart0_tx_string("rx fun start\r\n");
 	while(RBS==0);
 	ptr->id=C1RID;
 	ptr->dlc=(C1RFS>>16)&0xF;
@@ -21,12 +20,10 @@ void can1_rx(CAN1 *ptr){
 		ptr->byteB=C1RDB;
 	}
 	C1CMR=0x4;
-	uart0_tx_string("rx fun end\r\n");
 }
 
 #define TCS ((C1GSR>>3)&1)
 void can1_tx(CAN1 v){
-	uart0_tx_string("tx fun start\r\n");
 	C1TID1=v.id;
 	C1TFI1=(v.dlc<<16);
 	if(v.rtr==0){
@@ -37,6 +34,5 @@ void can1_tx(CAN1 v){
 		C1TFI1|=(1<<30);
 	C1CMR=0x21;
 	while(TCS==0);
-	uart0_tx_string("tx fun end\r\n");
 }
 
