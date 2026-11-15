@@ -1,9 +1,12 @@
 #include "header.h"
 void uart0_init(unsigned int baud){
 unsigned int result=0, pclk;
-if(VPBDIV==0x0) pclk=15000000;
-else if (VPBDIV==0x01) pclk=60000000;
-else if (VPBDIV==0x02) pclk=30000000;
+if(VPBDIV==0x0) 
+	pclk=15000000;
+else if (VPBDIV==0x01) 
+	pclk=60000000;
+else if (VPBDIV==0x02) 
+	pclk=30000000;
 result=pclk/(16*baud);
 PINSEL0|=0x05;
 U0LCR=0x83;
