@@ -19,7 +19,7 @@ The system monitors vehicle speed, fuel level, engine temperature, and indicator
 - UART-based real-time dashboard monitoring.
 - Bitwise data packing and unpacking.
 
-## 🛠️ Hardware Components
+## Hardware Components
 
 - 2 × LPC2129 ARM7 Microcontrollers
 - LM35 Temperature Sensor
@@ -35,7 +35,7 @@ The system monitors vehicle speed, fuel level, engine temperature, and indicator
 - Keil µVision IDE
 - Flash Magic
 - ADC, GPIO, Timer, EINT
-- CAN 2.0B Protocol
+- CAN Protocol
 - UART Communication
 
 ## System Architecture
@@ -56,7 +56,7 @@ The system monitors vehicle speed, fuel level, engine temperature, and indicator
 ## Communication Configuration
 
 - Microcontroller : LPC2129 ARM7 
-- CAN Protocol    : CAN 2.0B 
+- CAN Protocol    : CAN  
 - CAN Baud Rate   : 125 kbps 
 - CAN Identifier  : 0x123 
 - CAN Data Length : 8 Bytes 
