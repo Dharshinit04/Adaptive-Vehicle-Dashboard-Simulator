@@ -1,5 +1,4 @@
 # Adaptive-Vehicle-Dashboard-Simulator
-# Adaptive Vehicle Dashboard Simulator
 
 ## Project Overview
 
