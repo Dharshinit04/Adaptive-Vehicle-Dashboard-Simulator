@@ -54,7 +54,6 @@ v1.dlc=8;
         v1.byteB|=head_flag<<21; // head light
         v1.byteB|=right_flag<<20; // right indi
         v1.byteB|=left_flag<<19; // left indi
-        can1_tx(v1); // send data-frame
 
         // byteA
         temp=adc_temp(v1.byteA&0x3FF);
@@ -102,7 +101,8 @@ v1.dlc=8;
             uart0_tx_string("  ");
 
         uart0_tx_string("\r\n");
-        delay_ms(3000);
+		 can1_tx(v1); // send data-frame
+        delay_ms(300);
     }
 }
 
