@@ -1,84 +1,111 @@
+#include<lpc21xx.h>
 #include"header.h"
-extern CAN1	v1;
-volatile u32 right_flag=0,left_flag=0,head_flag=0;
 
-//head light intrpt0 p0.16
-//head light p0.21
-void config_ext_intrpt0(void){
-PINSEL1|=1<<0;
-EXTMODE|=0X7;
-EXTPOLAR|=0;
-}
+int left,right,head;
+CAN1 c;
 
-void ext_intrpt0_handler(void)__irq{
-head_flag^=1;
-if(head_flag) IOCLR0=1<<21;
-else IOSET0=1<<21;
-EXTINT=1<<0;
-VICVectAddr=0;
-}
-void config_vic_for_ext_intrpt0(){
-VICIntSelect=0;
-VICVectCntl0=14|1<<5;
-VICVectAddr0=(unsigned int)ext_intrpt0_handler;
-VICIntEnable=1<<14;
-}
-
-//left indicator intrpt1 p0.14
-//left indicxator p0.19
-void config_ext_intrpt1(void)
+////////////////////////////////////////////////
+void EXINT0_handeler()__irq
 {
-PINSEL0|=1<<29;
-EXTMODE|=0x7;
-EXTPOLAR|=0;
+    left^=1;
+    delay_ms(900);
+
+    if(left)
+    {
+        uart0_string("left on\r\n");
+        c.byteA=0x1;
+        //c.byteB=0;
+        IOCLR0=1<<6;
+    }
+    else
+    {
+        uart0_string("left off\r\n");
+        IOSET0=1<<6;
+        c.byteA=0x11;
+        //c.byteB=0;
+    }
+
+    can1_tx(c);
+    EXTINT=(1<<0);
+    VICVectAddr=0;
 }
 
-void ext_intrpt1_handler(void)__irq
+////////////////////////////////////////////////
+void EXINT1_handeler()__irq
 {
-while((IODIR0>>14)&1);
-IOSET0=1<<20;
-right_flag=0;
-left_flag^=1;
-if(left_flag) IOCLR0=1<<19;
-else 
-IOSET0=1<<19;
-EXTINT=1<<1;
-VICVectAddr=0;
-}
-void config_vic_for_ext_intrpt1()
-{
-VICIntSelect=0;
-VICVectCntl1=15|1<<5;
-VICVectAddr1=(unsigned int)ext_intrpt1_handler;
-VICIntEnable=1<<15;
+    head^=1;
+    delay_ms(900);
+
+    if(head)
+    {
+        uart0_string("head on\r\n");
+        c.byteA=0x2;
+        //c.byteB=0;
+        IOCLR0=1<<5;
+    }
+    else
+    {
+        uart0_string("head off\r\n");
+        IOSET0=1<<5;
+        c.byteA=0x22;
+        //c.byteB=0;
+    }
+
+    can1_tx(c);
+    EXTINT=(1<<1);
+    VICVectAddr=0;
 }
 
+//////////////////////////////////////////////////////////
+void EXINT2_handeler()__irq
+{
+    right^=1;
+    delay_ms(900);
 
-//right indicator intrpt p0.15
-//right indicator p0.20
-void config_ext_intrpt2(void)
-{
-PINSEL0=(unsigned)1<<31;
-EXTMODE|=0x7;
-EXTPOLAR|=0;
-}
-void ext_intrpt2_handler(void)__irq
-{
-IOSET0=1<<19;
-left_flag=0;
-right_flag^=1;
-if(right_flag) IOCLR0=1<<20;
-else
-IOSET0=1<<20;
-EXTINT=1<<2;
-VICVectAddr=0;
-}
+    if(right)
+    {
+        uart0_string("right on\r\n");
+        c.byteA=0x3;
+        //c.byteB=0;
+        IOCLR0=1<<4;
+    }
+    else
+    {
+        uart0_string("right off\r\n");
+        IOSET0=1<<4;
+        c.byteA=0x33;
+        //c.byteB=0;
+    }
 
-void config_vic_for_ext_intrpt2()
-{
-VICIntSelect=0;
-VICVectCntl2=16|1<<5;
-VICVectAddr2=(unsigned int)ext_intrpt2_handler;
-VICIntEnable=1<<16;
+    can1_tx(c);
+    EXTINT=(1<<2);
+    VICVectAddr=0;
 }
 
+///////////////////////////////////////////////////////////
+void eint0_init()
+{
+    c.id=0x123;
+    c.dlc=8;
+    c.rtr=0;
+    c.ff=0;
+
+    PINSEL1|=1;
+    PINSEL0|=0xA0000000;
+
+    EXTMODE|=7;
+    EXTPOLAR=0;
+
+    //VICIntSelect=0;
+
+    VICVectCntl0=(1<<5)|14;
+    VICVectAddr0=(unsigned int)EXINT0_handeler;
+
+    VICVectCntl1=(1<<5)|15;
+    VICVectAddr1=(unsigned int)EXINT1_handeler;
+
+    VICVectCntl2=(1<<5)|16;
+    VICVectAddr2=(unsigned int)EXINT2_handeler;
+
+    VICIntEnable=(7<<14);
+}
