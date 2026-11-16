@@ -8,19 +8,6 @@ void can1_init(void){
 	C1BTR=0x001C001D;//baudrate=125Kbps
 	C1MOD=0;//release reset mode
 }
-#define RBS (C1GSR&1)
-void can1_rx(CAN1 *ptr){
-	while(RBS==0);
-	ptr->id=C1RID;
-	ptr->dlc=(C1RFS>>16)&0xF;
-	ptr->rtr=(C1RFS>>30)&1;
-	ptr->ff=(C1RFS>>31)&1;
-	if(ptr->rtr==0){
-		ptr->byteA=C1RDA;
-		ptr->byteB=C1RDB;
-	}
-	C1CMR=0x4;
-}
 
 #define TCS ((C1GSR>>3)&1)
 void can1_tx(CAN1 v){
