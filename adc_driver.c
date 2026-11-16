@@ -18,23 +18,4 @@ ADCR^=(1<<ch_num);
 result=(ADDR>>6)&0x3ff;
 return result;
 }
-float adc_temp(u32 adc)
-{
-float temp=(adc*3.3)/1023;
-return temp/0.01;
-}
-
-float adc_speed(u32 adc)
-{
-float temp=(adc*120)/1023;
-return temp;
-}
-
-int dis_fuel(u32 adc)
-{
-int fuel=50-adc*10;
-if(fuel<0)
-fuel=0;
-return fuel;
-}
 
